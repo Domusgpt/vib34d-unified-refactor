@@ -3,7 +3,7 @@
  * WebGL-based renderer for individual holographic layers
  */
 
-import { GeometryLibrary } from '../geometry/GeometryLibrary.js';
+import { GeometryLibrary } from '../../geometry/GeometryLibrary.js';
 
 export class IntegratedHolographicVisualizer {
     constructor(canvasId, role, reactivity, variant) {

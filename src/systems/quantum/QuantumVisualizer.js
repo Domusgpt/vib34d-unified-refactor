@@ -4,7 +4,7 @@
  * This is the superior system with volumetric lighting, particles, and RGB glitch effects
  */
 
-import { GeometryLibrary } from '../geometry/GeometryLibrary.js';
+import { GeometryLibrary } from '../../geometry/GeometryLibrary.js';
 
 export class QuantumHolographicVisualizer {
     constructor(canvasId, role, reactivity, variant) {
