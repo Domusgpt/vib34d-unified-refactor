@@ -897,7 +897,7 @@ export class HolographicVisualizer {
             'gridDensity': 'density',
             'morphFactor': 'morph',
             'rot4dXW': 'rot4dXW',
-            'rot4dYW': 'rot4dYW', 
+            'rot4dYW': 'rot4dYW',
             'rot4dZW': 'rot4dZW',
             'hue': 'hue',
             'intensity': 'intensity',
@@ -907,5 +907,24 @@ export class HolographicVisualizer {
             'geometry': 'geometryType'
         };
         return paramMap[globalParam] || globalParam;
+    }
+
+    /**
+     * Get elapsed time in seconds
+     */
+    getTime() {
+        return (Date.now() - this.startTime) * 0.001;
+    }
+
+    /**
+     * Clean up WebGL resources
+     */
+    destroy() {
+        if (this.gl && this.program) {
+            this.gl.deleteProgram(this.program);
+        }
+        if (this.gl && this.buffer) {
+            this.gl.deleteBuffer(this.buffer);
+        }
     }
 }
