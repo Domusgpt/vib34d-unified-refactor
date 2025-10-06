@@ -122,10 +122,10 @@
 
         <div class="section">
             <h2>System Selection</h2>
-            <button id="btnFaceted" class="active">Faceted</button>
-            <button id="btnQuantum" disabled>Quantum (WIP)</button>
-            <button id="btnHolographic" disabled>Holographic (WIP)</button>
-            <button id="btnPolychora" disabled>Polychora (WIP)</button>
+            <button id="btnFaceted" class="active">🔷 Faceted</button>
+            <button id="btnQuantum">🌌 Quantum</button>
+            <button id="btnHolographic">✨ Holographic</button>
+            <button id="btnPolychora">🔮 Polychora</button>
         </div>
 
         <div class="section">
@@ -194,14 +194,38 @@
     <script type="module">
         import { SystemRegistry } from './src/systems/shared/SystemRegistry.js';
         import { FacetedSystem } from './src/systems/faceted/FacetedSystem.js';
+        import { QuantumSystem } from './src/systems/quantum/QuantumSystem.js';
+        import { HolographicSystem } from './src/systems/holographic/HolographicSystem.js';
+        import { PolychoraSystem } from './src/systems/polychora/PolychoraSystem.js';
 
         // Initialize system registry
         const registry = new SystemRegistry();
         const canvas = document.getElementById('mainCanvas');
         registry.setCanvas(canvas);
 
-        // Register Faceted system
+        // Register all 4 systems
         registry.register('faceted', FacetedSystem, {
+            canvasId: 'mainCanvas',
+            role: 'content',
+            reactivity: 1.0,
+            variant: 0
+        });
+
+        registry.register('quantum', QuantumSystem, {
+            canvasId: 'mainCanvas',
+            role: 'content',
+            reactivity: 1.0,
+            variant: 0
+        });
+
+        registry.register('holographic', HolographicSystem, {
+            canvasId: 'mainCanvas',
+            role: 'content',
+            reactivity: 1.0,
+            variant: 0
+        });
+
+        registry.register('polychora', PolychoraSystem, {
             canvasId: 'mainCanvas',
             role: 'content',
             reactivity: 1.0,
@@ -210,6 +234,9 @@
 
         // UI elements
         const btnFaceted = document.getElementById('btnFaceted');
+        const btnQuantum = document.getElementById('btnQuantum');
+        const btnHolographic = document.getElementById('btnHolographic');
+        const btnPolychora = document.getElementById('btnPolychora');
         const btnRandomize = document.getElementById('btnRandomize');
         const btnReset = document.getElementById('btnReset');
         const status = document.getElementById('status');
@@ -304,6 +331,29 @@
             });
             activeBtn.classList.add('active');
         }
+
+        // System switching buttons
+        async function switchSystem(name, button) {
+            try {
+                status.textContent = `Status: Loading ${name} system...`;
+                await registry.switchTo(name);
+                status.textContent = `Status: ✅ ${name} system active`;
+
+                // Update button states
+                [btnFaceted, btnQuantum, btnHolographic, btnPolychora].forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                button.classList.add('active');
+            } catch (err) {
+                console.error(`Error switching to ${name}:`, err);
+                status.textContent = `Status: ❌ Error loading ${name}`;
+            }
+        }
+
+        btnFaceted.addEventListener('click', () => switchSystem('faceted', btnFaceted));
+        btnQuantum.addEventListener('click', () => switchSystem('quantum', btnQuantum));
+        btnHolographic.addEventListener('click', () => switchSystem('holographic', btnHolographic));
+        btnPolychora.addEventListener('click', () => switchSystem('polychora', btnPolychora));
 
         // Control buttons
         btnRandomize.addEventListener('click', () => {
