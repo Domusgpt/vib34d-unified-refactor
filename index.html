@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIB34D Music Video Choreographer - Unified System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Courier New', monospace;
+            background: linear-gradient(135deg, #0a0a1e 0%, #1a0a2e 100%);
+            color: #00ff88;
+            overflow: hidden;
+        }
+
+        #mainCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: rgba(0, 0, 0, 0.9);
+            border-bottom: 2px solid #00ff88;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 1.5em;
+            font-weight: bold;
+            text-shadow: 0 0 20px #00ff88;
+        }
+
+        .system-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .system-btn {
+            background: rgba(0, 255, 136, 0.2);
+            border: 2px solid #00ff88;
+            color: #00ff88;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .system-btn:hover {
+            background: rgba(0, 255, 136, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .system-btn.active {
+            background: #00ff88;
+            color: #0a0a1e;
+        }
+
+        .controls-panel {
+            position: fixed;
+            right: 20px;
+            top: 80px;
+            width: 320px;
+            max-height: calc(100vh - 100px);
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #00ff88;
+            border-radius: 10px;
+            padding: 20px;
+            overflow-y: auto;
+            z-index: 999;
+        }
+
+        .panel-section {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(0, 255, 136, 0.3);
+        }
+
+        .panel-section:last-child {
+            border-bottom: none;
+        }
+
+        .section-title {
+            color: #00ffaa;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .control-group {
+            margin-bottom: 15px;
+        }
+
+        .control-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 0.9em;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: rgba(0, 255, 136, 0.2);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #00ff88;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #00ff88;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            flex: 1;
+            min-width: 80px;
+            background: rgba(0, 255, 136, 0.2);
+            border: 1px solid #00ff88;
+            color: #00ff88;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.85em;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background: rgba(0, 255, 136, 0.4);
+        }
+
+        .btn.active {
+            background: #00ff88;
+            color: #0a0a1e;
+        }
+
+        .btn-primary {
+            background: #00ff88;
+            color: #0a0a1e;
+        }
+
+        .btn-primary:hover {
+            background: #00ffaa;
+        }
+
+        .audio-upload {
+            margin-bottom: 15px;
+        }
+
+        .upload-btn {
+            width: 100%;
+            background: rgba(0, 136, 255, 0.3);
+            border: 2px dashed #0088ff;
+            color: #0088ff;
+            padding: 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .upload-btn:hover {
+            background: rgba(0, 136, 255, 0.5);
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .status-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background: rgba(0, 0, 0, 0.9);
+            border-top: 1px solid #00ff88;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            font-size: 0.9em;
+            z-index: 1000;
+        }
+
+        .status-info {
+            display: flex;
+            gap: 30px;
+        }
+
+        .audio-viz {
+            display: flex;
+            gap: 3px;
+            align-items: flex-end;
+            height: 20px;
+        }
+
+        .audio-bar {
+            width: 4px;
+            background: #00ff88;
+            border-radius: 2px;
+            transition: height 0.05s;
+        }
+
+        @media (max-width: 768px) {
+            .controls-panel {
+                width: 100%;
+                right: 0;
+                left: 0;
+                top: 60px;
+                max-height: 50vh;
+                border-radius: 0;
+            }
+
+            .system-buttons {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 5px;
+            }
+
+            .system-btn {
+                padding: 6px 10px;
+                font-size: 0.85em;
+            }
+        }
+
+        .signature {
+            position: fixed;
+            top: 70px;
+            left: 20px;
+            font-size: 0.8em;
+            opacity: 0.7;
+            z-index: 998;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #00ff88;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="mainCanvas"></canvas>
+
+    <div class="header">
+        <div class="logo">🎵 VIB34D</div>
+        <div class="system-buttons">
+            <button class="system-btn active" data-system="faceted">🔷 Faceted</button>
+            <button class="system-btn" data-system="quantum">🌌 Quantum</button>
+            <button class="system-btn" data-system="holographic">✨ Holographic</button>
+            <button class="system-btn" data-system="polychora">🔮 Polychora</button>
+        </div>
+    </div>
+
+    <div class="signature">
+        🌟 A Paul Phillips Manifestation
+    </div>
+
+    <div class="controls-panel">
+        <!-- Audio Upload -->
+        <div class="panel-section">
+            <div class="section-title">🎵 Audio</div>
+            <div class="audio-upload">
+                <label for="audioFile" class="upload-btn">
+                    📁 Load Audio File
+                    <div style="font-size: 0.8em; margin-top: 5px;">Click to upload</div>
+                </label>
+                <input type="file" id="audioFile" accept="audio/*">
+            </div>
+            <div class="btn-group">
+                <button class="btn" id="playBtn" disabled>▶️ Play</button>
+                <button class="btn" id="pauseBtn" disabled>⏸️ Pause</button>
+            </div>
+        </div>
+
+        <!-- Parameters -->
+        <div class="panel-section">
+            <div class="section-title">🎛️ Parameters</div>
+
+            <div class="control-group">
+                <div class="control-label">
+                    <span>4D Rotation XW</span>
+                    <span id="rot4dXWVal">0.00</span>
+                </div>
+                <input type="range" id="rot4dXW" min="-2" max="2" value="0" step="0.01">
+            </div>
+
+            <div class="control-group">
+                <div class="control-label">
+                    <span>4D Rotation YW</span>
+                    <span id="rot4dYWVal">0.00</span>
+                </div>
+                <input type="range" id="rot4dYW" min="-2" max="2" value="0" step="0.01">
+            </div>
+
+            <div class="control-group">
+                <div class="control-label">
+                    <span>4D Rotation ZW</span>
+                    <span id="rot4dZWVal">0.00</span>
+                </div>
+                <input type="range" id="rot4dZW" min="-2" max="2" value="0" step="0.01">
+            </div>
+
+            <div class="control-group">
+                <div class="control-label">
+                    <span>Grid Density</span>
+                    <span id="gridDensityVal">15</span>
+                </div>
+                <input type="range" id="gridDensity" min="4" max="100" value="15" step="0.1">
+            </div>
+
+            <div class="control-group">
+                <div class="control-label">
+                    <span>Morph Factor</span>
+                    <span id="morphFactorVal">1.0</span>
+                </div>
+                <input type="range" id="morphFactor" min="0" max="2" value="1" step="0.01">
+            </div>
+
+            <div class="control-group">
+                <div class="control-label">
+                    <span>Chaos</span>
+                    <span id="chaosVal">0.2</span>
+                </div>
+                <input type="range" id="chaos" min="0" max="1" value="0.2" step="0.01">
+            </div>
+
+            <div class="control-group">
+                <div class="control-label">
+                    <span>Speed</span>
+                    <span id="speedVal">1.0</span>
+                </div>
+                <input type="range" id="speed" min="0.1" max="3" value="1" step="0.1">
+            </div>
+
+            <div class="control-group">
+                <div class="control-label">
+                    <span>Hue</span>
+                    <span id="hueVal">200</span>
+                </div>
+                <input type="range" id="hue" min="0" max="360" value="200" step="1">
+            </div>
+        </div>
+
+        <!-- Audio Reactivity -->
+        <div class="panel-section">
+            <div class="section-title">🎚️ Audio Reactivity</div>
+            <div class="control-group">
+                <div class="control-label">
+                    <span>Reactivity Amount</span>
+                    <span id="reactivityVal">0.7</span>
+                </div>
+                <input type="range" id="audioReactivity" min="0" max="1" value="0.7" step="0.1">
+            </div>
+            <div class="btn-group">
+                <button class="btn active" id="audioOnBtn">Audio ON</button>
+                <button class="btn" id="audioOffBtn">Audio OFF</button>
+            </div>
+        </div>
+
+        <!-- Color System -->
+        <div class="panel-section">
+            <div class="section-title">🎨 Color System</div>
+            <div class="btn-group">
+                <button class="btn active" data-color="0">Single</button>
+                <button class="btn" data-color="5">Palette</button>
+                <button class="btn" data-color="6">Gradient</button>
+                <button class="btn" data-color="7">Reactive</button>
+            </div>
+            <div class="btn-group" style="margin-top: 10px;">
+                <button class="btn" data-palette="vaporwave">Vaporwave</button>
+                <button class="btn" data-palette="cyberpunk">Cyberpunk</button>
+                <button class="btn" data-palette="synthwave">Synthwave</button>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="panel-section">
+            <div class="section-title">🎮 Controls</div>
+            <div class="btn-group">
+                <button class="btn btn-primary" id="randomizeBtn">🎲 Randomize</button>
+                <button class="btn" id="resetBtn">🔄 Reset</button>
+            </div>
+            <div class="btn-group" style="margin-top: 10px;">
+                <button class="btn" id="exportBtn">💾 Export</button>
+                <button class="btn" id="saveBtn">📦 Save</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="status-bar">
+        <div class="status-info">
+            <div id="systemStatus">System: Faceted</div>
+            <div id="audioStatus">Audio: No file loaded</div>
+            <div id="fpsStatus">FPS: 60</div>
+        </div>
+        <div class="audio-viz" id="audioViz">
+            <div class="audio-bar"></div>
+            <div class="audio-bar"></div>
+            <div class="audio-bar"></div>
+            <div class="audio-bar"></div>
+            <div class="audio-bar"></div>
+            <div class="audio-bar"></div>
+            <div class="audio-bar"></div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { SystemRegistry } from './src/systems/shared/SystemRegistry.js';
+        import { FacetedSystem } from './src/systems/faceted/FacetedSystem.js';
+        import { QuantumSystem } from './src/systems/quantum/QuantumSystem.js';
+        import { HolographicSystem } from './src/systems/holographic/HolographicSystem.js';
+        import { PolychoraSystem } from './src/systems/polychora/PolychoraSystem.js';
+        import { AudioAnalyzer } from './src/audio/AudioAnalyzer.js';
+
+        // Initialize
+        const registry = new SystemRegistry();
+        const canvas = document.getElementById('mainCanvas');
+        registry.setCanvas(canvas);
+
+        // Audio context
+        let audioContext;
+        let audioElement;
+        let sourceNode;
+        let analyserNode;
+        let audioAnalyzer;
+
+        // Register all systems
+        const systemConfigs = {
+            faceted: { canvasId: 'mainCanvas', role: 'content', reactivity: 1.0, variant: 0 },
+            quantum: { canvasId: 'mainCanvas', role: 'content', reactivity: 1.0, variant: 0 },
+            holographic: { canvasId: 'mainCanvas', role: 'content', reactivity: 1.0, variant: 0 },
+            polychora: { canvasId: 'mainCanvas', role: 'content', reactivity: 1.0, variant: 0 }
+        };
+
+        registry.register('faceted', FacetedSystem, systemConfigs.faceted);
+        registry.register('quantum', QuantumSystem, systemConfigs.quantum);
+        registry.register('holographic', HolographicSystem, systemConfigs.holographic);
+        registry.register('polychora', PolychoraSystem, systemConfigs.polychora);
+
+        // Initialize first system
+        await registry.switchTo('faceted');
+
+        // System switching
+        document.querySelectorAll('.system-btn').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const system = btn.dataset.system;
+                await registry.switchTo(system);
+
+                document.querySelectorAll('.system-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                document.getElementById('systemStatus').textContent = `System: ${system.charAt(0).toUpperCase() + system.slice(1)}`;
+            });
+        });
+
+        // Parameter controls
+        const params = ['rot4dXW', 'rot4dYW', 'rot4dZW', 'gridDensity', 'morphFactor', 'chaos', 'speed', 'hue'];
+        params.forEach(param => {
+            const slider = document.getElementById(param);
+            const display = document.getElementById(param + 'Val');
+
+            slider.addEventListener('input', (e) => {
+                const value = parseFloat(e.target.value);
+                display.textContent = value.toFixed(param === 'hue' ? 0 : 2);
+                registry.updateParameter(param, value);
+            });
+        });
+
+        // Audio reactivity
+        document.getElementById('audioReactivity').addEventListener('input', (e) => {
+            const value = parseFloat(e.target.value);
+            document.getElementById('reactivityVal').textContent = value.toFixed(1);
+            registry.setAudioReactivity(value);
+        });
+
+        document.getElementById('audioOnBtn').addEventListener('click', () => {
+            registry.setAudioEnabled(true);
+            document.getElementById('audioOnBtn').classList.add('active');
+            document.getElementById('audioOffBtn').classList.remove('active');
+        });
+
+        document.getElementById('audioOffBtn').addEventListener('click', () => {
+            registry.setAudioEnabled(false);
+            document.getElementById('audioOffBtn').classList.add('active');
+            document.getElementById('audioOnBtn').classList.remove('active');
+        });
+
+        // Color system
+        document.querySelectorAll('[data-color]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const mode = parseInt(btn.dataset.color);
+                const system = registry.getCurrentSystem();
+                if (system) system.colorSystem.setMode(mode);
+
+                document.querySelectorAll('[data-color]').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
+        });
+
+        document.querySelectorAll('[data-palette]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const palette = btn.dataset.palette;
+                const system = registry.getCurrentSystem();
+                if (system) {
+                    system.colorSystem.setPalette(palette);
+                    system.colorSystem.setMode(5); // Palette mode
+                }
+            });
+        });
+
+        // Controls
+        document.getElementById('randomizeBtn').addEventListener('click', () => registry.randomize());
+        document.getElementById('resetBtn').addEventListener('click', () => registry.reset());
+
+        // Audio upload
+        document.getElementById('audioFile').addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                analyserNode = audioContext.createAnalyser();
+                analyserNode.fftSize = 2048;
+                analyserNode.connect(audioContext.destination);
+
+                audioAnalyzer = new AudioAnalyzer(analyserNode);
+                registry.setAudioAnalyzer(audioAnalyzer);
+            }
+
+            if (audioElement) audioElement.pause();
+
+            audioElement = new Audio(URL.createObjectURL(file));
+            if (sourceNode) sourceNode.disconnect();
+            sourceNode = audioContext.createMediaElementSource(audioElement);
+            sourceNode.connect(analyserNode);
+
+            document.getElementById('playBtn').disabled = false;
+            document.getElementById('pauseBtn').disabled = false;
+            document.getElementById('audioStatus').textContent = `Audio: ${file.name}`;
+        });
+
+        document.getElementById('playBtn').addEventListener('click', () => audioElement?.play());
+        document.getElementById('pauseBtn').addEventListener('click', () => audioElement?.pause());
+
+        // Audio visualization bars
+        function updateAudioViz() {
+            if (audioAnalyzer) {
+                const data = audioAnalyzer.analyze();
+                const bars = document.querySelectorAll('.audio-bar');
+                const bands = ['subBass', 'bass', 'lowMid', 'mid', 'highMid', 'high', 'air'];
+
+                bands.forEach((band, i) => {
+                    const value = data.bands[band]?.value || 0;
+                    bars[i].style.height = `${value * 20}px`;
+                });
+            }
+            requestAnimationFrame(updateAudioViz);
+        }
+        updateAudioViz();
+
+        // FPS counter
+        let lastTime = performance.now();
+        let fps = 60;
+        function updateFPS() {
+            const now = performance.now();
+            fps = Math.round(1000 / (now - lastTime));
+            lastTime = now;
+            document.getElementById('fpsStatus').textContent = `FPS: ${fps}`;
+            setTimeout(updateFPS, 500);
+        }
+        updateFPS();
+
+        console.log('🎨 VIB34D Music Video Choreographer Ready');
+        console.log('✅ All 4 systems unified with professional audio & color');
+    </script>
+</body>
+</html>
