@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIB34D Audio System Demo - Professional Audio Reactivity</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1e 100%);
+            color: #00ff88;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 0 0 20px #00ff88;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 10px #00ff88; }
+            to { text-shadow: 0 0 30px #00ff88, 0 0 40px #00ff88; }
+        }
+
+        .controls {
+            background: rgba(0, 255, 136, 0.1);
+            border: 2px solid #00ff88;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        button {
+            background: #00ff88;
+            color: #1a1a2e;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: #00ffaa;
+            transform: scale(1.05);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .panel {
+            background: rgba(0, 255, 136, 0.05);
+            border: 1px solid #00ff88;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        h2 {
+            color: #00ffaa;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .band {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .band-label {
+            width: 120px;
+            font-size: 0.9em;
+        }
+
+        .band-bar {
+            flex: 1;
+            height: 20px;
+            background: rgba(0, 255, 136, 0.2);
+            border-radius: 3px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .band-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00ff88, #00ffaa);
+            transition: width 0.05s linear;
+            box-shadow: 0 0 10px #00ff88;
+        }
+
+        .band-value {
+            width: 60px;
+            text-align: right;
+            font-size: 0.9em;
+        }
+
+        .param-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+
+        .param-name {
+            color: #00ffaa;
+        }
+
+        .param-value {
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .spectral {
+            margin-top: 20px;
+        }
+
+        .spectral-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 10px;
+            background: rgba(0, 255, 136, 0.1);
+            border-radius: 5px;
+        }
+
+        .onset-flash {
+            animation: flash 0.3s ease-out;
+        }
+
+        @keyframes flash {
+            0%, 100% { background: rgba(0, 255, 136, 0.1); }
+            50% { background: rgba(0, 255, 136, 0.5); }
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .file-label {
+            display: inline-block;
+            background: #00ff88;
+            color: #1a1a2e;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            transition: all 0.3s;
+        }
+
+        .file-label:hover {
+            background: #00ffaa;
+            transform: scale(1.05);
+        }
+
+        .info {
+            background: rgba(0, 136, 255, 0.1);
+            border: 1px solid #0088ff;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+
+        .signature {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            border-top: 1px solid #00ff88;
+            color: #00ffaa;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎵 VIB34D AUDIO SYSTEM DEMO</h1>
+
+        <div class="controls">
+            <label for="audioFile" class="file-label">📁 Load Audio File</label>
+            <input type="file" id="audioFile" accept="audio/*">
+            <button id="playBtn" disabled>▶️ Play</button>
+            <button id="pauseBtn" disabled>⏸️ Pause</button>
+        </div>
+
+        <div class="grid">
+            <!-- Frequency Bands -->
+            <div class="panel">
+                <h2>📊 7 Frequency Bands</h2>
+                <div id="bandsDisplay"></div>
+            </div>
+
+            <!-- Spectral Features -->
+            <div class="panel">
+                <h2>🎨 Spectral Features</h2>
+                <div id="spectralDisplay"></div>
+            </div>
+
+            <!-- Mapped Parameters -->
+            <div class="panel">
+                <h2>🎛️ Mapped Parameters</h2>
+                <div id="parametersDisplay"></div>
+            </div>
+
+            <!-- ADSR Envelopes -->
+            <div class="panel">
+                <h2>📈 ADSR Envelope States</h2>
+                <div id="envelopesDisplay"></div>
+            </div>
+        </div>
+
+        <div class="info">
+            <strong>🎯 How It Works:</strong><br>
+            This demo shows the complete professional audio analysis system:<br>
+            • <strong>7 Frequency Bands</strong>: Sub-bass, bass, low-mid, mid, high-mid, high, air<br>
+            • <strong>Spectral Features</strong>: Centroid (brightness), rolloff, flux (onset detection), RMS (loudness)<br>
+            • <strong>Parameter Mapping</strong>: Audio features routed to visual parameters with curves<br>
+            • <strong>ADSR Envelopes</strong>: Smooth transitions instead of jarring jumps<br>
+            • <strong>BPM Estimation</strong>: Automatic tempo detection from onsets
+        </div>
+
+        <div class="signature">
+            🌟 A Paul Phillips Manifestation<br>
+            © 2025 Clear Seas Solutions LLC - All Rights Reserved
+        </div>
+    </div>
+
+    <script type="module">
+        import { AudioAnalyzer } from './src/audio/AudioAnalyzer.js';
+        import { ParameterMapper } from './src/audio/ParameterMapper.js';
+
+        // Audio context and nodes
+        let audioContext;
+        let audioElement;
+        let sourceNode;
+        let analyserNode;
+        let audioAnalyzer;
+        let parameterMapper;
+        let animationId;
+
+        // UI elements
+        const fileInput = document.getElementById('audioFile');
+        const playBtn = document.getElementById('playBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const bandsDisplay = document.getElementById('bandsDisplay');
+        const spectralDisplay = document.getElementById('spectralDisplay');
+        const parametersDisplay = document.getElementById('parametersDisplay');
+        const envelopesDisplay = document.getElementById('envelopesDisplay');
+
+        // Initialize band display
+        const bandNames = ['subBass', 'bass', 'lowMid', 'mid', 'highMid', 'high', 'air'];
+        bandNames.forEach(name => {
+            const div = document.createElement('div');
+            div.className = 'band';
+            div.innerHTML = `
+                <div class="band-label">${name}</div>
+                <div class="band-bar"><div class="band-fill" id="${name}-fill"></div></div>
+                <div class="band-value" id="${name}-value">0.000</div>
+            `;
+            bandsDisplay.appendChild(div);
+        });
+
+        // File selection
+        fileInput.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            // Create audio context if needed
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                analyserNode = audioContext.createAnalyser();
+                analyserNode.fftSize = 2048;
+                analyserNode.smoothingTimeConstant = 0.8;
+                analyserNode.connect(audioContext.destination);
+
+                audioAnalyzer = new AudioAnalyzer(analyserNode);
+                parameterMapper = new ParameterMapper();
+            }
+
+            // Create audio element
+            if (audioElement) {
+                audioElement.pause();
+                audioElement = null;
+            }
+
+            audioElement = new Audio();
+            audioElement.src = URL.createObjectURL(file);
+
+            // Create source and connect
+            if (sourceNode) {
+                sourceNode.disconnect();
+            }
+            sourceNode = audioContext.createMediaElementSource(audioElement);
+            sourceNode.connect(analyserNode);
+
+            playBtn.disabled = false;
+            pauseBtn.disabled = false;
+        });
+
+        // Play button
+        playBtn.addEventListener('click', () => {
+            if (audioElement) {
+                audioElement.play();
+                startVisualization();
+            }
+        });
+
+        // Pause button
+        pauseBtn.addEventListener('click', () => {
+            if (audioElement) {
+                audioElement.pause();
+            }
+        });
+
+        // Visualization loop
+        function startVisualization() {
+            function update() {
+                // Analyze audio
+                const audioData = audioAnalyzer.analyze();
+
+                // Map to parameters
+                const mappedParams = parameterMapper.map(audioData);
+
+                // Update frequency bands display
+                for (const [name, band] of Object.entries(audioData.bands)) {
+                    const fill = document.getElementById(`${name}-fill`);
+                    const value = document.getElementById(`${name}-value`);
+                    if (fill && value) {
+                        const percent = (band.value * 100).toFixed(1);
+                        fill.style.width = `${percent}%`;
+                        value.textContent = band.value.toFixed(3);
+                    }
+                }
+
+                // Update spectral features
+                spectralDisplay.innerHTML = `
+                    <div class="spectral-item ${audioData.onset.detected ? 'onset-flash' : ''}">
+                        <span>Spectral Centroid</span>
+                        <span>${audioData.spectralCentroid.toFixed(3)}</span>
+                    </div>
+                    <div class="spectral-item">
+                        <span>Spectral Rolloff</span>
+                        <span>${audioData.spectralRolloff.toFixed(3)}</span>
+                    </div>
+                    <div class="spectral-item ${audioData.onset.detected ? 'onset-flash' : ''}">
+                        <span>Spectral Flux</span>
+                        <span>${audioData.spectralFlux.toFixed(3)} ${audioData.onset.detected ? '🔥 ONSET' : ''}</span>
+                    </div>
+                    <div class="spectral-item">
+                        <span>RMS (Loudness)</span>
+                        <span>${audioData.rms.toFixed(3)}</span>
+                    </div>
+                    <div class="spectral-item">
+                        <span>Estimated BPM</span>
+                        <span>${audioData.bpm.toFixed(1)} BPM</span>
+                    </div>
+                `;
+
+                // Update mapped parameters
+                parametersDisplay.innerHTML = Object.entries(mappedParams)
+                    .map(([name, value]) => `
+                        <div class="param-row">
+                            <span class="param-name">${name}</span>
+                            <span class="param-value">${value.toFixed(3)}</span>
+                        </div>
+                    `).join('');
+
+                // Update envelope states
+                const envelopeStates = Object.entries(parameterMapper.mappings)
+                    .filter(([_, mapping]) => mapping.envelope)
+                    .map(([name, mapping]) => `
+                        <div class="param-row">
+                            <span class="param-name">${name}</span>
+                            <span class="param-value">${mapping.envelope.getPhase().toUpperCase()}</span>
+                        </div>
+                    `).join('');
+                envelopesDisplay.innerHTML = envelopeStates;
+
+                animationId = requestAnimationFrame(update);
+            }
+
+            update();
+        }
+
+        console.log('🎵 VIB34D Audio System Demo Ready');
+        console.log('Load an audio file to see professional audio analysis in action!');
+    </script>
+</body>
+</html>

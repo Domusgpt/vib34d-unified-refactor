@@ -1,0 +1,23 @@
+{
+  "name": "vib34d-unified-refactor",
+  "version": "1.0.0",
+  "description": "VIB34D Music Video Choreographer - Unified System with Professional Audio Reactivity",
+  "main": "index.html",
+  "type": "module",
+  "scripts": {
+    "start": "npx serve -p 8080",
+    "test": "echo \"Tests coming soon\" && exit 0"
+  },
+  "keywords": [
+    "webgl",
+    "4d",
+    "visualization",
+    "audio-reactive",
+    "music-video",
+    "choreography",
+    "shaders"
+  ],
+  "author": "Paul Phillips <Paul@clearseassolutions.com>",
+  "license": "UNLICENSED",
+  "private": true
+}
