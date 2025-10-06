@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIB34D Architecture Demo - Unified System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: #0a0a0a;
+            color: #00ff88;
+            overflow: hidden;
+        }
+
+        #mainCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .ui {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #00ff88;
+            border-radius: 10px;
+            padding: 20px;
+            max-width: 400px;
+            z-index: 100;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            text-shadow: 0 0 10px #00ff88;
+        }
+
+        .section {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #00ff88;
+        }
+
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        h2 {
+            color: #00ffaa;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        button {
+            background: #00ff88;
+            color: #0a0a0a;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: #00ffaa;
+            transform: scale(1.05);
+        }
+
+        button.active {
+            background: #ff00aa;
+            color: white;
+        }
+
+        .slider-group {
+            margin: 10px 0;
+        }
+
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 0.9em;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .info {
+            background: rgba(0, 136, 255, 0.2);
+            border: 1px solid #0088ff;
+            border-radius: 5px;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 0.85em;
+        }
+
+        .status {
+            color: #0088ff;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="mainCanvas"></canvas>
+
+    <div class="ui">
+        <h1>🎨 VIB34D Architecture Demo</h1>
+
+        <div class="section">
+            <h2>System Selection</h2>
+            <button id="btnFaceted" class="active">Faceted</button>
+            <button id="btnQuantum" disabled>Quantum (WIP)</button>
+            <button id="btnHolographic" disabled>Holographic (WIP)</button>
+            <button id="btnPolychora" disabled>Polychora (WIP)</button>
+        </div>
+
+        <div class="section">
+            <h2>Parameters</h2>
+
+            <div class="slider-group">
+                <div class="slider-label">
+                    <span>Grid Density</span>
+                    <span id="densityValue">15</span>
+                </div>
+                <input type="range" id="gridDensity" min="4" max="100" value="15" step="0.1">
+            </div>
+
+            <div class="slider-group">
+                <div class="slider-label">
+                    <span>Speed</span>
+                    <span id="speedValue">1.0</span>
+                </div>
+                <input type="range" id="speed" min="0.1" max="3" value="1.0" step="0.1">
+            </div>
+
+            <div class="slider-group">
+                <div class="slider-label">
+                    <span>Hue</span>
+                    <span id="hueValue">200</span>
+                </div>
+                <input type="range" id="hue" min="0" max="360" value="200" step="1">
+            </div>
+
+            <div class="slider-group">
+                <div class="slider-label">
+                    <span>Audio Reactivity</span>
+                    <span id="reactivityValue">0.7</span>
+                </div>
+                <input type="range" id="audioReactivity" min="0" max="1" value="0.7" step="0.1">
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Color System</h2>
+            <button id="btnColorSingle">Single</button>
+            <button id="btnColorPalette">Palette</button>
+            <button id="btnColorGradient">Gradient</button>
+            <button id="btnColorReactive">Reactive</button>
+        </div>
+
+        <div class="section">
+            <h2>Controls</h2>
+            <button id="btnRandomize">🎲 Randomize</button>
+            <button id="btnReset">🔄 Reset</button>
+        </div>
+
+        <div class="info">
+            <strong>✨ New Architecture Features:</strong><br>
+            • Unified BaseSystem interface<br>
+            • Professional audio reactivity<br>
+            • Advanced color modes<br>
+            • Smooth system switching
+        </div>
+
+        <div class="status" id="status">
+            Status: Initializing...
+        </div>
+    </div>
+
+    <script type="module">
+        import { SystemRegistry } from './src/systems/shared/SystemRegistry.js';
+        import { FacetedSystem } from './src/systems/faceted/FacetedSystem.js';
+
+        // Initialize system registry
+        const registry = new SystemRegistry();
+        const canvas = document.getElementById('mainCanvas');
+        registry.setCanvas(canvas);
+
+        // Register Faceted system
+        registry.register('faceted', FacetedSystem, {
+            canvasId: 'mainCanvas',
+            role: 'content',
+            reactivity: 1.0,
+            variant: 0
+        });
+
+        // UI elements
+        const btnFaceted = document.getElementById('btnFaceted');
+        const btnRandomize = document.getElementById('btnRandomize');
+        const btnReset = document.getElementById('btnReset');
+        const status = document.getElementById('status');
+
+        // Parameter sliders
+        const gridDensity = document.getElementById('gridDensity');
+        const speed = document.getElementById('speed');
+        const hue = document.getElementById('hue');
+        const audioReactivity = document.getElementById('audioReactivity');
+
+        // Color mode buttons
+        const btnColorSingle = document.getElementById('btnColorSingle');
+        const btnColorPalette = document.getElementById('btnColorPalette');
+        const btnColorGradient = document.getElementById('btnColorGradient');
+        const btnColorReactive = document.getElementById('btnColorReactive');
+
+        // Initialize
+        async function init() {
+            try {
+                status.textContent = 'Status: Loading Faceted system...';
+                await registry.switchTo('faceted');
+                status.textContent = 'Status: ✅ Faceted system active';
+            } catch (err) {
+                console.error('Initialization error:', err);
+                status.textContent = `Status: ❌ Error - ${err.message}`;
+            }
+        }
+
+        // Parameter updates
+        gridDensity.addEventListener('input', (e) => {
+            const value = parseFloat(e.target.value);
+            document.getElementById('densityValue').textContent = value.toFixed(1);
+            registry.updateParameter('gridDensity', value);
+        });
+
+        speed.addEventListener('input', (e) => {
+            const value = parseFloat(e.target.value);
+            document.getElementById('speedValue').textContent = value.toFixed(1);
+            registry.updateParameter('speed', value);
+        });
+
+        hue.addEventListener('input', (e) => {
+            const value = parseInt(e.target.value);
+            document.getElementById('hueValue').textContent = value;
+            registry.updateParameter('hue', value);
+        });
+
+        audioReactivity.addEventListener('input', (e) => {
+            const value = parseFloat(e.target.value);
+            document.getElementById('reactivityValue').textContent = value.toFixed(1);
+            registry.setAudioReactivity(value);
+        });
+
+        // Color mode buttons
+        btnColorSingle.addEventListener('click', () => {
+            const system = registry.getCurrentSystem();
+            if (system) {
+                system.colorSystem.setMode(0); // SINGLE
+                updateColorButtons(btnColorSingle);
+            }
+        });
+
+        btnColorPalette.addEventListener('click', () => {
+            const system = registry.getCurrentSystem();
+            if (system) {
+                system.colorSystem.setMode(5); // PALETTE
+                system.colorSystem.setPalette('vaporwave');
+                updateColorButtons(btnColorPalette);
+            }
+        });
+
+        btnColorGradient.addEventListener('click', () => {
+            const system = registry.getCurrentSystem();
+            if (system) {
+                system.colorSystem.setMode(6); // GRADIENT
+                system.colorSystem.setGradientType(2); // RADIAL
+                updateColorButtons(btnColorGradient);
+            }
+        });
+
+        btnColorReactive.addEventListener('click', () => {
+            const system = registry.getCurrentSystem();
+            if (system) {
+                system.colorSystem.setMode(7); // REACTIVE
+                updateColorButtons(btnColorReactive);
+            }
+        });
+
+        function updateColorButtons(activeBtn) {
+            [btnColorSingle, btnColorPalette, btnColorGradient, btnColorReactive].forEach(btn => {
+                btn.classList.remove('active');
+            });
+            activeBtn.classList.add('active');
+        }
+
+        // Control buttons
+        btnRandomize.addEventListener('click', () => {
+            registry.randomize();
+        });
+
+        btnReset.addEventListener('click', () => {
+            registry.reset();
+        });
+
+        // Start
+        init();
+
+        console.log('🎨 VIB34D Architecture Demo Ready');
+        console.log('New unified system architecture with BaseSystem interface!');
+    </script>
+</body>
+</html>
