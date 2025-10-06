@@ -491,7 +491,16 @@
         registry.register('polychora', PolychoraSystem, systemConfigs.polychora);
 
         // Initialize first system
-        await registry.switchTo('faceted');
+        async function initSystem() {
+            try {
+                await registry.switchTo('faceted');
+                console.log('✅ Faceted system initialized');
+            } catch (err) {
+                console.error('❌ Error initializing system:', err);
+            }
+        }
+
+        initSystem();
 
         // System switching
         document.querySelectorAll('.system-btn').forEach(btn => {
