@@ -930,7 +930,14 @@ void main() {
     }
     
     // Audio reactivity now handled directly in render() loop - no complex methods needed
-    
+
+    /**
+     * Get elapsed time in seconds
+     */
+    getTime() {
+        return (Date.now() - this.startTime) * 0.001;
+    }
+
     /**
      * Clean up WebGL resources
      */

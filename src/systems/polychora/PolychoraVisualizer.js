@@ -515,7 +515,7 @@ class PolychoraVisualizer {
 }
 
 // Import 4D physics engine
-import { Polychora4DPhysics } from '../physics/Polychora4DPhysics.js';
+import { Polychora4DPhysics } from './Polychora4DPhysics.js';
 
 export class PolychoraSystem {
     constructor() {
