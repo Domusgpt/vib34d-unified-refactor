@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VIB34D Music Video Choreographer - Unified System</title>
+    <title>VIB34D - Professional 4D Music Video Choreographer</title>
     <style>
         * {
             margin: 0;
@@ -12,9 +12,9 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Courier New', monospace;
-            background: linear-gradient(135deg, #0a0a1e 0%, #1a0a2e 100%);
-            color: #00ff88;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #000;
+            color: #0ff;
             overflow: hidden;
         }
 
@@ -22,272 +22,390 @@
             position: fixed;
             top: 0;
             left: 0;
-            width: 100vw;
-            height: 100vh;
+            width: 100%;
+            height: 100%;
+            background: #000;
         }
 
+        /* Header */
         .header {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
-            height: 60px;
-            background: rgba(0, 0, 0, 0.9);
-            border-bottom: 2px solid #00ff88;
+            height: 70px;
+            background: linear-gradient(180deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.85) 100%);
+            border-bottom: 2px solid #0ff;
+            backdrop-filter: blur(10px);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 20px;
+            padding: 0 30px;
             z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 255, 255, 0.2);
         }
 
         .logo {
-            font-size: 1.5em;
-            font-weight: bold;
-            text-shadow: 0 0 20px #00ff88;
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-shadow: 0 0 20px #0ff, 0 0 40px #0ff;
+            background: linear-gradient(135deg, #0ff 0%, #00ffaa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .system-buttons {
             display: flex;
-            gap: 10px;
+            gap: 12px;
         }
 
         .system-btn {
-            background: rgba(0, 255, 136, 0.2);
-            border: 2px solid #00ff88;
-            color: #00ff88;
-            padding: 8px 16px;
-            border-radius: 5px;
+            background: rgba(0, 255, 255, 0.1);
+            border: 2px solid #0ff;
+            color: #0ff;
+            padding: 10px 20px;
+            border-radius: 8px;
             cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .system-btn:hover {
-            background: rgba(0, 255, 136, 0.4);
+            background: rgba(0, 255, 255, 0.2);
             transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 255, 255, 0.4);
         }
 
         .system-btn.active {
-            background: #00ff88;
-            color: #0a0a1e;
+            background: linear-gradient(135deg, #0ff 0%, #00ffaa 100%);
+            color: #000;
+            box-shadow: 0 4px 20px rgba(0, 255, 255, 0.6);
         }
 
+        /* Controls Panel */
         .controls-panel {
             position: fixed;
             right: 20px;
-            top: 80px;
-            width: 320px;
-            max-height: calc(100vh - 100px);
-            background: rgba(0, 0, 0, 0.9);
-            border: 2px solid #00ff88;
-            border-radius: 10px;
-            padding: 20px;
+            top: 90px;
+            width: 340px;
+            max-height: calc(100vh - 180px);
+            background: linear-gradient(180deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.9) 100%);
+            border: 2px solid #0ff;
+            border-radius: 12px;
+            padding: 25px;
             overflow-y: auto;
             z-index: 999;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 8px 32px rgba(0, 255, 255, 0.3);
+        }
+
+        .controls-panel::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .controls-panel::-webkit-scrollbar-track {
+            background: rgba(0, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        .controls-panel::-webkit-scrollbar-thumb {
+            background: #0ff;
+            border-radius: 4px;
         }
 
         .panel-section {
-            margin-bottom: 20px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid rgba(0, 255, 136, 0.3);
+            margin-bottom: 25px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.2);
         }
 
         .panel-section:last-child {
             border-bottom: none;
+            margin-bottom: 0;
         }
 
         .section-title {
-            color: #00ffaa;
-            font-size: 1.1em;
+            font-size: 14px;
+            font-weight: 700;
+            color: #0ff;
             margin-bottom: 15px;
-            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
         }
 
-        .control-group {
-            margin-bottom: 15px;
+        /* Sliders */
+        .param-control {
+            margin-bottom: 18px;
         }
 
-        .control-label {
+        .param-label {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 5px;
-            font-size: 0.9em;
+            margin-bottom: 8px;
+            font-size: 13px;
+            color: #00ffaa;
+        }
+
+        .param-name {
+            font-weight: 600;
+        }
+
+        .param-value {
+            font-weight: 700;
+            color: #0ff;
         }
 
         input[type="range"] {
             width: 100%;
             height: 6px;
+            background: rgba(0, 255, 255, 0.2);
             border-radius: 3px;
-            background: rgba(0, 255, 136, 0.2);
             outline: none;
             -webkit-appearance: none;
         }
 
         input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
-            width: 16px;
-            height: 16px;
+            width: 18px;
+            height: 18px;
+            background: linear-gradient(135deg, #0ff 0%, #00ffaa 100%);
             border-radius: 50%;
-            background: #00ff88;
             cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.6);
+            transition: all 0.2s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.8);
         }
 
         input[type="range"]::-moz-range-thumb {
-            width: 16px;
-            height: 16px;
+            width: 18px;
+            height: 18px;
+            background: linear-gradient(135deg, #0ff 0%, #00ffaa 100%);
             border-radius: 50%;
-            background: #00ff88;
             cursor: pointer;
             border: none;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.6);
+        }
+
+        /* Buttons */
+        .btn {
+            background: rgba(0, 255, 255, 0.1);
+            border: 2px solid #0ff;
+            color: #0ff;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.3s;
+            margin: 4px;
+        }
+
+        .btn:hover {
+            background: rgba(0, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 255, 255, 0.4);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #0ff 0%, #00ffaa 100%);
+            color: #000;
+            border-color: #0ff;
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 4px 20px rgba(0, 255, 255, 0.6);
         }
 
         .btn-group {
             display: flex;
-            gap: 8px;
             flex-wrap: wrap;
+            gap: 0;
+            margin: -4px;
         }
 
-        .btn {
-            flex: 1;
-            min-width: 80px;
-            background: rgba(0, 255, 136, 0.2);
-            border: 1px solid #00ff88;
-            color: #00ff88;
-            padding: 8px 12px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.85em;
-            transition: all 0.3s;
-        }
-
-        .btn:hover {
-            background: rgba(0, 255, 136, 0.4);
-        }
-
-        .btn.active {
-            background: #00ff88;
-            color: #0a0a1e;
-        }
-
-        .btn-primary {
-            background: #00ff88;
-            color: #0a0a1e;
-        }
-
-        .btn-primary:hover {
-            background: #00ffaa;
-        }
-
-        .audio-upload {
-            margin-bottom: 15px;
-        }
-
-        .upload-btn {
-            width: 100%;
-            background: rgba(0, 136, 255, 0.3);
-            border: 2px dashed #0088ff;
-            color: #0088ff;
-            padding: 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            text-align: center;
-            transition: all 0.3s;
-        }
-
-        .upload-btn:hover {
-            background: rgba(0, 136, 255, 0.5);
-        }
-
+        /* File Input */
         input[type="file"] {
             display: none;
         }
 
+        .file-label {
+            display: block;
+            background: rgba(0, 255, 255, 0.1);
+            border: 2px dashed #0ff;
+            color: #0ff;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .file-label:hover {
+            background: rgba(0, 255, 255, 0.2);
+            border-color: #00ffaa;
+        }
+
+        /* Audio Controls */
+        .audio-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .play-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #0ff 0%, #00ffaa 100%);
+            color: #000;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .play-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 20px rgba(0, 255, 255, 0.6);
+        }
+
+        /* Status Bar */
         .status-bar {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
-            height: 40px;
-            background: rgba(0, 0, 0, 0.9);
-            border-top: 1px solid #00ff88;
+            height: 60px;
+            background: linear-gradient(0deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.85) 100%);
+            border-top: 2px solid #0ff;
+            backdrop-filter: blur(10px);
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            padding: 0 20px;
-            font-size: 0.9em;
-            z-index: 1000;
+            padding: 0 30px;
+            z-index: 998;
+            box-shadow: 0 -4px 20px rgba(0, 255, 255, 0.2);
         }
 
         .status-info {
             display: flex;
             gap: 30px;
+            align-items: center;
+            flex: 1;
         }
 
+        .status-item {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .status-label {
+            color: #00ffaa;
+            margin-right: 8px;
+        }
+
+        .status-value {
+            color: #0ff;
+            font-weight: 700;
+        }
+
+        /* Audio Visualizer Bars */
         .audio-viz {
             display: flex;
-            gap: 3px;
+            gap: 6px;
             align-items: flex-end;
-            height: 20px;
+            height: 30px;
         }
 
         .audio-bar {
-            width: 4px;
-            background: #00ff88;
-            border-radius: 2px;
-            transition: height 0.05s;
+            width: 8px;
+            background: linear-gradient(0deg, #0ff 0%, #00ffaa 100%);
+            border-radius: 4px 4px 0 0;
+            transition: height 0.1s ease-out;
+            height: 0%;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.6);
         }
 
+        /* Loading Spinner */
+        .loading {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 10000;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(0, 255, 255, 0.2);
+            border-top: 4px solid #0ff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 16px;
+            font-weight: 700;
+            color: #0ff;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
             .controls-panel {
-                width: 100%;
-                right: 0;
-                left: 0;
-                top: 60px;
-                max-height: 50vh;
-                border-radius: 0;
+                width: calc(100% - 40px);
+                right: 20px;
+                left: 20px;
             }
 
-            .system-buttons {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 5px;
+            .logo {
+                font-size: 20px;
             }
 
             .system-btn {
-                padding: 6px 10px;
-                font-size: 0.85em;
+                padding: 8px 12px;
+                font-size: 12px;
             }
-        }
-
-        .signature {
-            position: fixed;
-            top: 70px;
-            left: 20px;
-            font-size: 0.8em;
-            opacity: 0.7;
-            z-index: 998;
-        }
-
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.3);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #00ff88;
-            border-radius: 4px;
         }
     </style>
 </head>
 <body>
+    <!-- Loading Screen -->
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <div class="loading-text">Initializing VIB34D...</div>
+    </div>
+
+    <!-- Main Canvas -->
     <canvas id="mainCanvas"></canvas>
 
+    <!-- Header -->
     <div class="header">
-        <div class="logo">🎵 VIB34D</div>
+        <div class="logo">VIB34D</div>
         <div class="system-buttons">
             <button class="system-btn active" data-system="faceted">🔷 Faceted</button>
             <button class="system-btn" data-system="quantum">🌌 Quantum</button>
@@ -296,24 +414,17 @@
         </div>
     </div>
 
-    <div class="signature">
-        🌟 A Paul Phillips Manifestation
-    </div>
-
+    <!-- Controls Panel -->
     <div class="controls-panel">
-        <!-- Audio Upload -->
+        <!-- Audio Section -->
         <div class="panel-section">
             <div class="section-title">🎵 Audio</div>
-            <div class="audio-upload">
-                <label for="audioFile" class="upload-btn">
-                    📁 Load Audio File
-                    <div style="font-size: 0.8em; margin-top: 5px;">Click to upload</div>
-                </label>
-                <input type="file" id="audioFile" accept="audio/*">
-            </div>
-            <div class="btn-group">
-                <button class="btn" id="playBtn" disabled>▶️ Play</button>
-                <button class="btn" id="pauseBtn" disabled>⏸️ Pause</button>
+            <input type="file" id="audioFile" accept="audio/*">
+            <label for="audioFile" class="file-label" id="fileLabel">
+                📁 Choose Audio File
+            </label>
+            <div class="audio-controls">
+                <button class="play-btn" id="playBtn" disabled>▶️ Play</button>
             </div>
         </div>
 
@@ -321,100 +432,64 @@
         <div class="panel-section">
             <div class="section-title">🎛️ Parameters</div>
 
-            <div class="control-group">
-                <div class="control-label">
-                    <span>4D Rotation XW</span>
-                    <span id="rot4dXWVal">0.00</span>
+            <div class="param-control">
+                <div class="param-label">
+                    <span class="param-name">4D Rotation XW</span>
+                    <span class="param-value" id="rot4dXWVal">0.00</span>
                 </div>
-                <input type="range" id="rot4dXW" min="-2" max="2" value="0" step="0.01">
+                <input type="range" id="rot4dXW" min="-2" max="2" step="0.01" value="0">
             </div>
 
-            <div class="control-group">
-                <div class="control-label">
-                    <span>4D Rotation YW</span>
-                    <span id="rot4dYWVal">0.00</span>
+            <div class="param-control">
+                <div class="param-label">
+                    <span class="param-name">4D Rotation YW</span>
+                    <span class="param-value" id="rot4dYWVal">0.00</span>
                 </div>
-                <input type="range" id="rot4dYW" min="-2" max="2" value="0" step="0.01">
+                <input type="range" id="rot4dYW" min="-2" max="2" step="0.01" value="0">
             </div>
 
-            <div class="control-group">
-                <div class="control-label">
-                    <span>4D Rotation ZW</span>
-                    <span id="rot4dZWVal">0.00</span>
+            <div class="param-control">
+                <div class="param-label">
+                    <span class="param-name">4D Rotation ZW</span>
+                    <span class="param-value" id="rot4dZWVal">0.00</span>
                 </div>
-                <input type="range" id="rot4dZW" min="-2" max="2" value="0" step="0.01">
+                <input type="range" id="rot4dZW" min="-2" max="2" step="0.01" value="0">
             </div>
 
-            <div class="control-group">
-                <div class="control-label">
-                    <span>Grid Density</span>
-                    <span id="gridDensityVal">15</span>
+            <div class="param-control">
+                <div class="param-label">
+                    <span class="param-name">Grid Density</span>
+                    <span class="param-value" id="gridDensityVal">50</span>
                 </div>
-                <input type="range" id="gridDensity" min="4" max="100" value="15" step="0.1">
+                <input type="range" id="gridDensity" min="4" max="100" step="1" value="50">
             </div>
 
-            <div class="control-group">
-                <div class="control-label">
-                    <span>Morph Factor</span>
-                    <span id="morphFactorVal">1.0</span>
+            <div class="param-control">
+                <div class="param-label">
+                    <span class="param-name">Speed</span>
+                    <span class="param-value" id="speedVal">1.0</span>
                 </div>
-                <input type="range" id="morphFactor" min="0" max="2" value="1" step="0.01">
+                <input type="range" id="speed" min="0.1" max="3" step="0.1" value="1">
             </div>
 
-            <div class="control-group">
-                <div class="control-label">
-                    <span>Chaos</span>
-                    <span id="chaosVal">0.2</span>
+            <div class="param-control">
+                <div class="param-label">
+                    <span class="param-name">Hue</span>
+                    <span class="param-value" id="hueVal">200</span>
                 </div>
-                <input type="range" id="chaos" min="0" max="1" value="0.2" step="0.01">
-            </div>
-
-            <div class="control-group">
-                <div class="control-label">
-                    <span>Speed</span>
-                    <span id="speedVal">1.0</span>
-                </div>
-                <input type="range" id="speed" min="0.1" max="3" value="1" step="0.1">
-            </div>
-
-            <div class="control-group">
-                <div class="control-label">
-                    <span>Hue</span>
-                    <span id="hueVal">200</span>
-                </div>
-                <input type="range" id="hue" min="0" max="360" value="200" step="1">
+                <input type="range" id="hue" min="0" max="360" step="1" value="200">
             </div>
         </div>
 
         <!-- Audio Reactivity -->
         <div class="panel-section">
             <div class="section-title">🎚️ Audio Reactivity</div>
-            <div class="control-group">
-                <div class="control-label">
-                    <span>Reactivity Amount</span>
-                    <span id="reactivityVal">0.7</span>
+            <div class="param-control">
+                <div class="param-label">
+                    <span class="param-name">Amount</span>
+                    <span class="param-value" id="reactivityVal">0.7</span>
                 </div>
-                <input type="range" id="audioReactivity" min="0" max="1" value="0.7" step="0.1">
-            </div>
-            <div class="btn-group">
-                <button class="btn active" id="audioOnBtn">Audio ON</button>
-                <button class="btn" id="audioOffBtn">Audio OFF</button>
-            </div>
-        </div>
-
-        <!-- Color System -->
-        <div class="panel-section">
-            <div class="section-title">🎨 Color System</div>
-            <div class="btn-group">
-                <button class="btn active" data-color="0">Single</button>
-                <button class="btn" data-color="5">Palette</button>
-                <button class="btn" data-color="6">Gradient</button>
-                <button class="btn" data-color="7">Reactive</button>
-            </div>
-            <div class="btn-group" style="margin-top: 10px;">
-                <button class="btn" data-palette="vaporwave">Vaporwave</button>
-                <button class="btn" data-palette="cyberpunk">Cyberpunk</button>
-                <button class="btn" data-palette="synthwave">Synthwave</button>
+                <input type="range" id="reactivity" min="0" max="1" step="0.1" value="0.7">
             </div>
         </div>
 
@@ -424,21 +499,26 @@
             <div class="btn-group">
                 <button class="btn btn-primary" id="randomizeBtn">🎲 Randomize</button>
                 <button class="btn" id="resetBtn">🔄 Reset</button>
-                <button class="btn" id="galleryBtn">🎨 Gallery</button>
-            </div>
-            <div class="btn-group" style="margin-top: 10px;">
-                <button class="btn" id="exportBtn">💾 Export</button>
-                <button class="btn" id="saveBtn">📦 Save</button>
-                <button class="btn" id="loadBtn">📂 Load</button>
+                <button class="btn" id="galleryBtn">🎨 Presets</button>
             </div>
         </div>
     </div>
 
+    <!-- Status Bar -->
     <div class="status-bar">
         <div class="status-info">
-            <div id="systemStatus">System: Faceted</div>
-            <div id="audioStatus">Audio: No file loaded</div>
-            <div id="fpsStatus">FPS: 60</div>
+            <div class="status-item">
+                <span class="status-label">System:</span>
+                <span class="status-value" id="systemStatus">Faceted</span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">Audio:</span>
+                <span class="status-value" id="audioStatus">No audio</span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">FPS:</span>
+                <span class="status-value" id="fpsStatus">60</span>
+            </div>
         </div>
         <div class="audio-viz" id="audioViz">
             <div class="audio-bar"></div>
@@ -458,26 +538,22 @@
         import { HolographicSystem } from './src/systems/holographic/HolographicSystem.js';
         import { PolychoraSystem } from './src/systems/polychora/PolychoraSystem.js';
         import { AudioAnalyzer } from './src/audio/AudioAnalyzer.js';
-        import { ExportManager } from './src/export/ExportManager.js';
         import { GalleryManager } from './src/export/GalleryManager.js';
 
         // Initialize
         const registry = new SystemRegistry();
         const canvas = document.getElementById('mainCanvas');
+        const loading = document.getElementById('loading');
 
-        // Initialize export and gallery managers
-        let exportManager = null;
         let galleryManager = null;
+        let audioContext = null;
+        let audioSource = null;
+        let audioAnalyzer = null;
+        let isPlaying = false;
+
         registry.setCanvas(canvas);
 
-        // Audio context
-        let audioContext;
-        let audioElement;
-        let sourceNode;
-        let analyserNode;
-        let audioAnalyzer;
-
-        // Register all systems
+        // System configs
         const systemConfigs = {
             faceted: { canvasId: 'mainCanvas', role: 'content', reactivity: 1.0, variant: 0 },
             quantum: { canvasId: 'mainCanvas', role: 'content', reactivity: 1.0, variant: 0 },
@@ -485,254 +561,206 @@
             polychora: { canvasId: 'mainCanvas', role: 'content', reactivity: 1.0, variant: 0 }
         };
 
+        // Register systems
         registry.register('faceted', FacetedSystem, systemConfigs.faceted);
         registry.register('quantum', QuantumSystem, systemConfigs.quantum);
         registry.register('holographic', HolographicSystem, systemConfigs.holographic);
         registry.register('polychora', PolychoraSystem, systemConfigs.polychora);
 
-        // Initialize first system
-        async function initSystem() {
+        // Initialize
+        async function init() {
             try {
                 await registry.switchTo('faceted');
-                console.log('✅ Faceted system initialized');
+                loading.classList.add('hidden');
+                console.log('✅ VIB34D Initialized');
             } catch (err) {
-                console.error('❌ Error initializing system:', err);
+                console.error('❌ Error initializing:', err);
+                loading.querySelector('.loading-text').textContent = 'Error: ' + err.message;
             }
         }
 
-        initSystem();
+        init();
 
         // System switching
         document.querySelectorAll('.system-btn').forEach(btn => {
             btn.addEventListener('click', async () => {
                 const system = btn.dataset.system;
-                await registry.switchTo(system);
 
-                document.querySelectorAll('.system-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
+                loading.classList.remove('hidden');
+                loading.querySelector('.loading-text').textContent = `Loading ${system}...`;
 
-                document.getElementById('systemStatus').textContent = `System: ${system.charAt(0).toUpperCase() + system.slice(1)}`;
+                try {
+                    await registry.switchTo(system);
+
+                    document.querySelectorAll('.system-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+
+                    document.getElementById('systemStatus').textContent =
+                        system.charAt(0).toUpperCase() + system.slice(1);
+
+                    loading.classList.add('hidden');
+                } catch (err) {
+                    console.error('Error switching system:', err);
+                    loading.querySelector('.loading-text').textContent = 'Error: ' + err.message;
+                }
             });
         });
 
-        // Parameter controls
-        const params = ['rot4dXW', 'rot4dYW', 'rot4dZW', 'gridDensity', 'morphFactor', 'chaos', 'speed', 'hue'];
+        // Parameters
+        const params = ['rot4dXW', 'rot4dYW', 'rot4dZW', 'gridDensity', 'speed', 'hue'];
         params.forEach(param => {
             const slider = document.getElementById(param);
             const display = document.getElementById(param + 'Val');
 
             slider.addEventListener('input', (e) => {
                 const value = parseFloat(e.target.value);
-                display.textContent = value.toFixed(param === 'hue' ? 0 : 2);
+                display.textContent = value.toFixed(param === 'gridDensity' ? 0 : param.includes('rot') ? 2 : 1);
                 registry.updateParameter(param, value);
             });
         });
 
-        // Audio reactivity
-        document.getElementById('audioReactivity').addEventListener('input', (e) => {
+        // Reactivity
+        document.getElementById('reactivity').addEventListener('input', (e) => {
             const value = parseFloat(e.target.value);
             document.getElementById('reactivityVal').textContent = value.toFixed(1);
             registry.setAudioReactivity(value);
         });
 
-        document.getElementById('audioOnBtn').addEventListener('click', () => {
-            registry.setAudioEnabled(true);
-            document.getElementById('audioOnBtn').classList.add('active');
-            document.getElementById('audioOffBtn').classList.remove('active');
-        });
-
-        document.getElementById('audioOffBtn').addEventListener('click', () => {
-            registry.setAudioEnabled(false);
-            document.getElementById('audioOffBtn').classList.add('active');
-            document.getElementById('audioOnBtn').classList.remove('active');
-        });
-
-        // Color system
-        document.querySelectorAll('[data-color]').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const mode = parseInt(btn.dataset.color);
-                const system = registry.getCurrentSystem();
-                if (system) system.colorSystem.setMode(mode);
-
-                document.querySelectorAll('[data-color]').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-            });
-        });
-
-        document.querySelectorAll('[data-palette]').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const palette = btn.dataset.palette;
-                const system = registry.getCurrentSystem();
-                if (system) {
-                    system.colorSystem.setPalette(palette);
-                    system.colorSystem.setMode(5); // Palette mode
-                }
-            });
-        });
-
         // Controls
-        document.getElementById('randomizeBtn').addEventListener('click', () => registry.randomize());
-        document.getElementById('resetBtn').addEventListener('click', () => registry.reset());
-
-        // Export button - shows export options
-        document.getElementById('exportBtn').addEventListener('click', async () => {
-            if (!exportManager) {
-                exportManager = new ExportManager(canvas, registry);
-            }
-
-            const action = confirm('Export Video? (OK = Video, Cancel = Trading Card)');
-
-            if (action) {
-                // Export video
-                if (exportManager.isRecordingActive()) {
-                    await exportManager.stopVideoRecording();
-                    document.getElementById('exportBtn').textContent = '💾 Export';
-                } else {
-                    await exportManager.startVideoRecording();
-                    document.getElementById('exportBtn').textContent = '⏹️ Stop';
-                }
-            } else {
-                // Export trading card
-                await exportManager.generateTradingCard({
-                    system: registry.getCurrentSystem()?.name,
-                    timestamp: Date.now()
-                });
-            }
+        document.getElementById('randomizeBtn').addEventListener('click', () => {
+            params.forEach(param => {
+                const slider = document.getElementById(param);
+                const min = parseFloat(slider.min);
+                const max = parseFloat(slider.max);
+                const value = Math.random() * (max - min) + min;
+                slider.value = value;
+                slider.dispatchEvent(new Event('input'));
+            });
         });
 
-        // Save button - saves configuration as JSON
-        document.getElementById('saveBtn').addEventListener('click', () => {
-            if (!exportManager) {
-                exportManager = new ExportManager(canvas, registry);
-            }
+        document.getElementById('resetBtn').addEventListener('click', () => {
+            document.getElementById('rot4dXW').value = 0;
+            document.getElementById('rot4dYW').value = 0;
+            document.getElementById('rot4dZW').value = 0;
+            document.getElementById('gridDensity').value = 50;
+            document.getElementById('speed').value = 1;
+            document.getElementById('hue').value = 200;
+            document.getElementById('reactivity').value = 0.7;
 
-            const name = prompt('Enter configuration name:', `My Config ${Date.now()}`);
-            if (name) {
-                exportManager.saveConfiguration(name);
-            }
+            params.forEach(param => {
+                document.getElementById(param).dispatchEvent(new Event('input'));
+            });
+            document.getElementById('reactivity').dispatchEvent(new Event('input'));
         });
 
-        // Load button - loads configuration from JSON file
-        document.getElementById('loadBtn').addEventListener('click', () => {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = '.json';
-
-            input.onchange = async (e) => {
-                if (!exportManager) {
-                    exportManager = new ExportManager(canvas, registry);
-                }
-
-                const file = e.target.files[0];
-                if (file) {
-                    try {
-                        await exportManager.loadConfiguration(file);
-                        alert(`✅ Configuration loaded: ${file.name}`);
-                    } catch (err) {
-                        alert(`❌ Error loading configuration: ${err.message}`);
-                    }
-                }
-            };
-
-            input.click();
-        });
-
-        // Gallery button - shows preset gallery
-        document.getElementById('galleryBtn').addEventListener('click', () => {
+        // Gallery
+        document.getElementById('galleryBtn').addEventListener('click', async () => {
             if (!galleryManager) {
+                const { GalleryManager } = await import('./src/export/GalleryManager.js');
                 galleryManager = new GalleryManager(registry);
             }
 
             const presets = galleryManager.getAllPresets();
-            const presetNames = Object.keys(presets);
+            const names = Object.keys(presets);
 
-            let message = '🎨 Available Presets:\n\n';
-            presetNames.forEach((name, i) => {
-                const preset = presets[name];
-                message += `${i + 1}. ${name} - ${preset.system}\n`;
-                if (preset.description) {
-                    message += `   ${preset.description}\n`;
-                }
-                message += '\n';
+            let msg = '🎨 Available Presets:\n\n';
+            names.forEach((name, i) => {
+                msg += `${i + 1}. ${name}\n`;
             });
+            msg += '\nEnter number:';
 
-            message += '\nEnter preset number to load:';
-            const choice = prompt(message);
-
+            const choice = prompt(msg);
             if (choice) {
                 const index = parseInt(choice) - 1;
-                const presetName = presetNames[index];
-
-                if (presetName) {
-                    galleryManager.loadPreset(presetName)
-                        .then(() => alert(`✅ Preset loaded: ${presetName}`))
-                        .catch(err => alert(`❌ Error: ${err.message}`));
-                } else {
-                    alert('❌ Invalid preset number');
+                if (names[index]) {
+                    await galleryManager.loadPreset(names[index]);
                 }
             }
         });
 
-        // Audio upload
+        // Audio
         document.getElementById('audioFile').addEventListener('change', async (e) => {
             const file = e.target.files[0];
             if (!file) return;
 
-            if (!audioContext) {
-                audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                analyserNode = audioContext.createAnalyser();
+            try {
+                if (!audioContext) {
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                }
+
+                const arrayBuffer = await file.arrayBuffer();
+                const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+
+                if (audioSource) {
+                    audioSource.stop();
+                }
+
+                audioSource = audioContext.createBufferSource();
+                audioSource.buffer = audioBuffer;
+
+                const analyserNode = audioContext.createAnalyser();
                 analyserNode.fftSize = 2048;
+
+                audioSource.connect(analyserNode);
                 analyserNode.connect(audioContext.destination);
 
                 audioAnalyzer = new AudioAnalyzer(analyserNode);
                 registry.setAudioAnalyzer(audioAnalyzer);
+
+                document.getElementById('fileLabel').textContent = `📁 ${file.name}`;
+                document.getElementById('audioStatus').textContent = file.name;
+                document.getElementById('playBtn').disabled = false;
+                isPlaying = false;
+                document.getElementById('playBtn').textContent = '▶️ Play';
+
+            } catch (err) {
+                console.error('Audio load error:', err);
+                alert('Error loading audio: ' + err.message);
             }
-
-            if (audioElement) audioElement.pause();
-
-            audioElement = new Audio(URL.createObjectURL(file));
-            if (sourceNode) sourceNode.disconnect();
-            sourceNode = audioContext.createMediaElementSource(audioElement);
-            sourceNode.connect(analyserNode);
-
-            document.getElementById('playBtn').disabled = false;
-            document.getElementById('pauseBtn').disabled = false;
-            document.getElementById('audioStatus').textContent = `Audio: ${file.name}`;
         });
 
-        document.getElementById('playBtn').addEventListener('click', () => audioElement?.play());
-        document.getElementById('pauseBtn').addEventListener('click', () => audioElement?.pause());
+        document.getElementById('playBtn').addEventListener('click', () => {
+            if (!audioSource) return;
 
-        // Audio visualization bars
-        function updateAudioViz() {
-            if (audioAnalyzer) {
-                const data = audioAnalyzer.analyze();
-                const bars = document.querySelectorAll('.audio-bar');
-                const bands = ['subBass', 'bass', 'lowMid', 'mid', 'highMid', 'high', 'air'];
+            if (!isPlaying) {
+                audioSource.start(0);
+                isPlaying = true;
+                document.getElementById('playBtn').textContent = '⏸️ Pause';
 
-                bands.forEach((band, i) => {
-                    const value = data.bands[band]?.value || 0;
-                    bars[i].style.height = `${value * 20}px`;
-                });
+                // Visualize audio
+                setInterval(() => {
+                    if (!audioAnalyzer) return;
+                    const data = audioAnalyzer.analyze();
+                    const bars = document.querySelectorAll('.audio-bar');
+                    const bandNames = ['subBass', 'bass', 'lowMid', 'mid', 'highMid', 'high', 'air'];
+
+                    bars.forEach((bar, i) => {
+                        const value = data.bands[bandNames[i]]?.value || 0;
+                        bar.style.height = (value * 100) + '%';
+                    });
+                }, 50);
             }
-            requestAnimationFrame(updateAudioViz);
-        }
-        updateAudioViz();
+        });
 
-        // FPS counter
+        // FPS Counter
         let lastTime = performance.now();
-        let fps = 60;
+        let frames = 0;
+
         function updateFPS() {
+            frames++;
             const now = performance.now();
-            fps = Math.round(1000 / (now - lastTime));
-            lastTime = now;
-            document.getElementById('fpsStatus').textContent = `FPS: ${fps}`;
-            setTimeout(updateFPS, 500);
+            if (now - lastTime >= 1000) {
+                document.getElementById('fpsStatus').textContent = frames;
+                frames = 0;
+                lastTime = now;
+            }
+            requestAnimationFrame(updateFPS);
         }
+
         updateFPS();
 
-        console.log('🎨 VIB34D Music Video Choreographer Ready');
-        console.log('✅ All 4 systems unified with professional audio & color');
+        console.log('🎨 VIB34D - Professional 4D Music Video Choreographer');
+        console.log('✨ A Paul Phillips Manifestation');
     </script>
 </body>
 </html>
