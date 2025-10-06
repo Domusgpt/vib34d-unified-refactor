@@ -424,10 +424,12 @@
             <div class="btn-group">
                 <button class="btn btn-primary" id="randomizeBtn">🎲 Randomize</button>
                 <button class="btn" id="resetBtn">🔄 Reset</button>
+                <button class="btn" id="galleryBtn">🎨 Gallery</button>
             </div>
             <div class="btn-group" style="margin-top: 10px;">
                 <button class="btn" id="exportBtn">💾 Export</button>
                 <button class="btn" id="saveBtn">📦 Save</button>
+                <button class="btn" id="loadBtn">📂 Load</button>
             </div>
         </div>
     </div>
@@ -456,10 +458,16 @@
         import { HolographicSystem } from './src/systems/holographic/HolographicSystem.js';
         import { PolychoraSystem } from './src/systems/polychora/PolychoraSystem.js';
         import { AudioAnalyzer } from './src/audio/AudioAnalyzer.js';
+        import { ExportManager } from './src/export/ExportManager.js';
+        import { GalleryManager } from './src/export/GalleryManager.js';
 
         // Initialize
         const registry = new SystemRegistry();
         const canvas = document.getElementById('mainCanvas');
+
+        // Initialize export and gallery managers
+        let exportManager = null;
+        let galleryManager = null;
         registry.setCanvas(canvas);
 
         // Audio context
@@ -556,6 +564,105 @@
         // Controls
         document.getElementById('randomizeBtn').addEventListener('click', () => registry.randomize());
         document.getElementById('resetBtn').addEventListener('click', () => registry.reset());
+
+        // Export button - shows export options
+        document.getElementById('exportBtn').addEventListener('click', async () => {
+            if (!exportManager) {
+                exportManager = new ExportManager(canvas, registry);
+            }
+
+            const action = confirm('Export Video? (OK = Video, Cancel = Trading Card)');
+
+            if (action) {
+                // Export video
+                if (exportManager.isRecordingActive()) {
+                    await exportManager.stopVideoRecording();
+                    document.getElementById('exportBtn').textContent = '💾 Export';
+                } else {
+                    await exportManager.startVideoRecording();
+                    document.getElementById('exportBtn').textContent = '⏹️ Stop';
+                }
+            } else {
+                // Export trading card
+                await exportManager.generateTradingCard({
+                    system: registry.getCurrentSystem()?.name,
+                    timestamp: Date.now()
+                });
+            }
+        });
+
+        // Save button - saves configuration as JSON
+        document.getElementById('saveBtn').addEventListener('click', () => {
+            if (!exportManager) {
+                exportManager = new ExportManager(canvas, registry);
+            }
+
+            const name = prompt('Enter configuration name:', `My Config ${Date.now()}`);
+            if (name) {
+                exportManager.saveConfiguration(name);
+            }
+        });
+
+        // Load button - loads configuration from JSON file
+        document.getElementById('loadBtn').addEventListener('click', () => {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+
+            input.onchange = async (e) => {
+                if (!exportManager) {
+                    exportManager = new ExportManager(canvas, registry);
+                }
+
+                const file = e.target.files[0];
+                if (file) {
+                    try {
+                        await exportManager.loadConfiguration(file);
+                        alert(`✅ Configuration loaded: ${file.name}`);
+                    } catch (err) {
+                        alert(`❌ Error loading configuration: ${err.message}`);
+                    }
+                }
+            };
+
+            input.click();
+        });
+
+        // Gallery button - shows preset gallery
+        document.getElementById('galleryBtn').addEventListener('click', () => {
+            if (!galleryManager) {
+                galleryManager = new GalleryManager(registry);
+            }
+
+            const presets = galleryManager.getAllPresets();
+            const presetNames = Object.keys(presets);
+
+            let message = '🎨 Available Presets:\n\n';
+            presetNames.forEach((name, i) => {
+                const preset = presets[name];
+                message += `${i + 1}. ${name} - ${preset.system}\n`;
+                if (preset.description) {
+                    message += `   ${preset.description}\n`;
+                }
+                message += '\n';
+            });
+
+            message += '\nEnter preset number to load:';
+            const choice = prompt(message);
+
+            if (choice) {
+                const index = parseInt(choice) - 1;
+                const presetName = presetNames[index];
+
+                if (presetName) {
+                    galleryManager.loadPreset(presetName)
+                        .then(() => alert(`✅ Preset loaded: ${presetName}`))
+                        .catch(err => alert(`❌ Error: ${err.message}`));
+                } else {
+                    alert('❌ Invalid preset number');
+                }
+            }
+        });
 
         // Audio upload
         document.getElementById('audioFile').addEventListener('change', async (e) => {
