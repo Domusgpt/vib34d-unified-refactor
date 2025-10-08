@@ -30,6 +30,11 @@ export class PatternTriggerUI {
             box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
         `;
 
+        // Hide on mobile by default - will be moved to sidebar
+        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768) {
+            container.style.display = 'none';
+        }
+
         const title = document.createElement('div');
         title.textContent = 'QUICK PATTERNS';
         title.style.cssText = `

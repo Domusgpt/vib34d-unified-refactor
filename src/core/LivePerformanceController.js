@@ -11,11 +11,15 @@ import { ReactivityFormatSwitcher } from '../ui/ReactivityFormatSwitcher.js';
 import { ParameterMappingUI } from '../ui/ParameterMappingUI.js';
 import { ChoreographyEngine } from '../choreography/ChoreographyEngine.js';
 import { PatternTriggerUI } from '../ui/PatternTriggerUI.js';
+import { MobileOptimizedUI } from '../ui/MobileOptimizedUI.js';
 
 export class LivePerformanceController {
     constructor(systemRegistry, audioAnalyzer) {
         this.registry = systemRegistry;
         this.audioAnalyzer = audioAnalyzer;
+
+        // Initialize mobile UI first
+        this.mobileUI = new MobileOptimizedUI();
 
         // Initialize all subsystems
         this.touchpadController = new TouchpadController();
@@ -31,6 +35,9 @@ export class LivePerformanceController {
 
         // Add pattern trigger UI
         this.patternTriggerUI = new PatternTriggerUI(this);
+
+        // Organize UI for mobile
+        this.mobileUI.organizeUI();
     }
 
     createModeSelector() {
@@ -211,22 +218,10 @@ export class LivePerformanceController {
         const currentSystem = this.registry.currentSystem;
         if (!currentSystem) return;
 
-        // Apply each parameter
-        Object.entries(params).forEach(([key, value]) => {
-            if (currentSystem.params && currentSystem.params.hasOwnProperty(key)) {
-                currentSystem.params[key] = value;
-            }
-
-            // Also try setting directly on the system
-            if (currentSystem.hasOwnProperty(key)) {
-                currentSystem[key] = value;
-            }
-
-            // For visualizers
-            if (currentSystem.visualizer && currentSystem.visualizer.hasOwnProperty(key)) {
-                currentSystem.visualizer[key] = value;
-            }
-        });
+        // Use the proper updateParameters method that all systems have
+        if (currentSystem.updateParameters) {
+            currentSystem.updateParameters(params);
+        }
     }
 
     // Load a choreography preset
