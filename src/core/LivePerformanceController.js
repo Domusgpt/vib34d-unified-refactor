@@ -180,34 +180,30 @@ export class LivePerformanceController {
 
     // Main update loop - called every frame
     update(deltaTime) {
+        // ONLY apply parameters in choreography mode
+        // In touchpad mode, let the existing sliders work normally
+        if (this.mode !== 'choreography' && this.mode !== 'hybrid') {
+            return null;
+        }
+
         let finalParams = {};
 
         // Get audio data
         const audioData = this.audioAnalyzer ? this.audioAnalyzer.analyze() : {};
 
-        switch (this.mode) {
-            case 'touchpad':
-                // Touchpads set base, audio modulates
-                const touchpadParams = this.touchpadController.getParameterValues();
-                finalParams = this.formatSwitcher.applyReactivity(touchpadParams, audioData);
-                break;
+        if (this.mode === 'choreography') {
+            // Choreography engine controls everything
+            finalParams = this.choreographyEngine.update(deltaTime, audioData);
+        } else if (this.mode === 'hybrid') {
+            // Choreography sets base, touchpads override, audio modulates
+            const choreographyParams = this.choreographyEngine.update(deltaTime, audioData);
+            const touchpadOverrides = this.touchpadController.getParameterValues();
 
-            case 'choreography':
-                // Choreography engine controls everything
-                finalParams = this.choreographyEngine.update(deltaTime, audioData);
-                break;
+            // Merge: choreography base + touchpad overrides
+            const mergedParams = { ...choreographyParams, ...touchpadOverrides };
 
-            case 'hybrid':
-                // Choreography sets base, touchpads override, audio modulates
-                const choreographyParams = this.choreographyEngine.update(deltaTime, audioData);
-                const touchpadOverrides = this.touchpadController.getParameterValues();
-
-                // Merge: choreography base + touchpad overrides
-                const mergedParams = { ...choreographyParams, ...touchpadOverrides };
-
-                // Apply audio reactivity on top
-                finalParams = this.formatSwitcher.applyReactivity(mergedParams, audioData);
-                break;
+            // Apply audio reactivity on top
+            finalParams = this.formatSwitcher.applyReactivity(mergedParams, audioData);
         }
 
         return finalParams;
@@ -215,6 +211,9 @@ export class LivePerformanceController {
 
     // Apply parameters to current system
     applyToCurrentSystem(params) {
+        // Don't apply if null (touchpad mode - let sliders work)
+        if (!params) return;
+
         const currentSystem = this.registry.currentSystem;
         if (!currentSystem) return;
 

@@ -93,7 +93,16 @@ export class MobileOptimizedUI {
             /* Mobile-specific adjustments */
             @media (max-width: 768px) {
                 .controls-panel {
-                    display: none !important;
+                    position: static !important;
+                    width: 100% !important;
+                    max-width: 100% !important;
+                    right: auto !important;
+                    top: auto !important;
+                    max-height: none !important;
+                    border: none !important;
+                    background: transparent !important;
+                    padding: 0 !important;
+                    overflow: visible !important;
                 }
 
                 #secondary-touchpad-container {
@@ -160,6 +169,12 @@ export class MobileOptimizedUI {
     organizeUI() {
         // Move all UI elements into the mobile container
         setTimeout(() => {
+            // Move original controls panel on mobile
+            const controlsPanel = document.querySelector('.controls-panel');
+            if (controlsPanel && this.isMobile) {
+                this.container.appendChild(controlsPanel);
+            }
+
             this.moveElementToContainer('performance-mode-selector');
             this.moveElementToContainer('reactivity-format-switcher');
             this.moveElementToContainer('parameter-mapping-ui');
