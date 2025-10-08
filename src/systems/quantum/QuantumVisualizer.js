@@ -855,11 +855,17 @@ void main() {
      */
     render() {
         if (!this.program) {
+            console.error(`❌ QUANTUM RENDER BLOCKED: No WebGL program! Canvas: ${this.canvas?.id}`);
             if (window.mobileDebug && !this._noProgramWarned) {
                 window.mobileDebug.log(`❌ ${this.canvas?.id}: No WebGL program for render`);
                 this._noProgramWarned = true;
             }
             return;
+        }
+
+        if (!this._renderStartLogged) {
+            console.log(`✅ QUANTUM RENDER STARTED: Canvas ${this.canvas?.id}, program exists, gl context: ${!!this.gl}`);
+            this._renderStartLogged = true;
         }
         
         this.resize();

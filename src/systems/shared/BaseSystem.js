@@ -212,9 +212,13 @@ export class BaseSystem {
             return;
         }
 
+        console.log(`🎬 ${this.name}: Starting render loop`);
         this.isRunning = true;
         const loop = (timestamp) => {
-            if (!this.isRunning) return;
+            if (!this.isRunning) {
+                console.log(`⏹️ ${this.name}: Render loop stopped`);
+                return;
+            }
 
             const deltaTime = timestamp - this.lastFrameTime;
             this.lastFrameTime = timestamp;

@@ -711,7 +711,15 @@ export class HolographicVisualizer {
     }
     
     render() {
-        if (!this.program) return;
+        if (!this.program) {
+            console.error(`❌ HOLOGRAPHIC RENDER BLOCKED: No WebGL program! Canvas: ${this.canvas?.id}`);
+            return;
+        }
+
+        if (!this._renderStartLogged) {
+            console.log(`✅ HOLOGRAPHIC RENDER STARTED: Canvas ${this.canvas?.id}, program exists, gl context: ${!!this.gl}`);
+            this._renderStartLogged = true;
+        }
         
         this.resize();
         this.gl.useProgram(this.program);

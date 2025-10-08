@@ -548,17 +548,24 @@ void main() {
      */
     render() {
         if (!this.program) {
+            console.error(`❌ FACETED RENDER BLOCKED: No WebGL program! Canvas: ${this.canvas?.id}`);
             if (window.mobileDebug) {
                 window.mobileDebug.log(`❌ ${this.canvas?.id}: No WebGL program compiled`);
             }
             return;
         }
-        
+
         if (!this.gl) {
+            console.error(`❌ FACETED RENDER BLOCKED: No WebGL context! Canvas: ${this.canvas?.id}`);
             if (window.mobileDebug) {
                 window.mobileDebug.log(`❌ ${this.canvas?.id}: No WebGL context`);
             }
             return;
+        }
+
+        if (!this._renderStartLogged) {
+            console.log(`✅ FACETED RENDER STARTED: Canvas ${this.canvas?.id}, program exists, gl context exists`);
+            this._renderStartLogged = true;
         }
         
         try {
