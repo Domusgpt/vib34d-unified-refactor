@@ -166,6 +166,11 @@ export class QuantumHolographicVisualizer {
     init() {
         this.initShaders();
         this.initBuffers();
+
+        // CRITICAL FIX: Enable alpha blending for transparency
+        this.gl.enable(this.gl.BLEND);
+        this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
+
         this.resize();
     }
     
