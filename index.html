@@ -760,46 +760,6 @@
 
         updateFPS();
 
-        // Initialize LivePerformanceController - integrates ALL live features
-        let performanceController = null;
-
-        import('./src/core/LivePerformanceController.js').then(module => {
-            const LivePerformanceController = module.LivePerformanceController;
-            performanceController = new LivePerformanceController(registry, audioAnalyzer);
-
-            // Integrate into main render loop
-            let lastFrameTime = performance.now();
-
-            function performanceRenderLoop() {
-                const now = performance.now();
-                const deltaTime = (now - lastFrameTime) / 1000;
-                lastFrameTime = now;
-
-                // Get final parameters from performance controller
-                const finalParams = performanceController.update(deltaTime);
-
-                // Apply to current system
-                performanceController.applyToCurrentSystem(finalParams);
-
-                requestAnimationFrame(performanceRenderLoop);
-            }
-
-            performanceRenderLoop();
-
-            // Expose for dev console debugging
-            window.performanceController = performanceController;
-
-            console.log('🎭 LivePerformanceController initialized');
-            console.log('💡 Keyboard shortcuts:');
-            console.log('   1 = Touchpad Mode');
-            console.log('   2 = Choreography Mode');
-            console.log('   3 = Hybrid Mode');
-            console.log('   SPACE = Cycle reactivity formats');
-            console.log('   R = Reset touchpads to center');
-        }).catch(err => {
-            console.error('Failed to load LivePerformanceController:', err);
-        });
-
         console.log('🎨 VIB34D - Professional 4D Music Video Choreographer');
         console.log('✨ A Paul Phillips Manifestation');
     </script>
