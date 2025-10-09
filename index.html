@@ -533,13 +533,14 @@
     </div>
 
     <script type="module">
-        import { SystemRegistry } from './src/systems/shared/SystemRegistry.js';
-        import { FacetedSystem } from './src/systems/faceted/FacetedSystem.js';
-        import { QuantumSystem } from './src/systems/quantum/QuantumSystem.js';
-        import { HolographicSystem } from './src/systems/holographic/HolographicSystem.js';
-        import { PolychoraSystem } from './src/systems/polychora/PolychoraSystem.js';
-        import { AudioAnalyzer } from './src/audio/AudioAnalyzer.js';
-        import { GalleryManager } from './src/export/GalleryManager.js';
+        const v = Date.now(); // Cache buster
+        import { SystemRegistry } from `./src/systems/shared/SystemRegistry.js?v=${v}`;
+        import { FacetedSystem } from `./src/systems/faceted/FacetedSystem.js?v=${v}`;
+        import { QuantumSystem } from `./src/systems/quantum/QuantumSystem.js?v=${v}`;
+        import { HolographicSystem } from `./src/systems/holographic/HolographicSystem.js?v=${v}`;
+        import { PolychoraSystem } from `./src/systems/polychora/PolychoraSystem.js?v=${v}`;
+        import { AudioAnalyzer } from `./src/audio/AudioAnalyzer.js?v=${v}`;
+        import { GalleryManager } from `./src/export/GalleryManager.js?v=${v}`;
 
         // Initialize
         const registry = new SystemRegistry();
