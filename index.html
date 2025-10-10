@@ -480,6 +480,54 @@
                 </div>
                 <input type="range" id="hue" min="0" max="360" step="1" value="200">
             </div>
+
+            <div class="param-control">
+                <div class="param-label">
+                    <span class="param-name">Geometry Type</span>
+                    <span class="param-value" id="geometryVal">0</span>
+                </div>
+                <input type="range" id="geometry" min="0" max="7" step="1" value="0">
+            </div>
+
+            <div class="param-control">
+                <div class="param-label">
+                    <span class="param-name">Morph Factor</span>
+                    <span class="param-value" id="morphFactorVal">1.0</span>
+                </div>
+                <input type="range" id="morphFactor" min="0" max="2" step="0.1" value="1.0">
+            </div>
+
+            <div class="param-control">
+                <div class="param-label">
+                    <span class="param-name">Chaos</span>
+                    <span class="param-value" id="chaosVal">0.2</span>
+                </div>
+                <input type="range" id="chaos" min="0" max="1" step="0.05" value="0.2">
+            </div>
+
+            <div class="param-control">
+                <div class="param-label">
+                    <span class="param-name">Intensity</span>
+                    <span class="param-value" id="intensityVal">0.5</span>
+                </div>
+                <input type="range" id="intensity" min="0" max="1" step="0.05" value="0.5">
+            </div>
+
+            <div class="param-control">
+                <div class="param-label">
+                    <span class="param-name">Saturation</span>
+                    <span class="param-value" id="saturationVal">0.8</span>
+                </div>
+                <input type="range" id="saturation" min="0" max="1" step="0.05" value="0.8">
+            </div>
+
+            <div class="param-control">
+                <div class="param-label">
+                    <span class="param-name">Dimension</span>
+                    <span class="param-value" id="dimensionVal">4.0</span>
+                </div>
+                <input type="range" id="dimension" min="3" max="5" step="0.1" value="4.0">
+            </div>
         </div>
 
         <!-- Audio Reactivity -->
@@ -533,13 +581,13 @@
     </div>
 
     <script type="module">
-        import { SystemRegistry } from './src/systems/shared/SystemRegistry.js?v=20251009-3';
-        import { FacetedSystem } from './src/systems/faceted/FacetedSystem.js?v=20251009-3';
-        import { QuantumSystem } from './src/systems/quantum/QuantumSystem.js?v=20251009-3';
-        import { HolographicSystem } from './src/systems/holographic/HolographicSystem.js?v=20251009-3';
-        import { PolychoraSystem } from './src/systems/polychora/PolychoraSystem.js?v=20251009-3';
-        import { AudioAnalyzer } from './src/audio/AudioAnalyzer.js?v=20251009-3';
-        import { GalleryManager } from './src/export/GalleryManager.js?v=20251009-3';
+        import { SystemRegistry } from './src/systems/shared/SystemRegistry.js?v=20251009-4';
+        import { FacetedSystem } from './src/systems/faceted/FacetedSystem.js?v=20251009-4';
+        import { QuantumSystem } from './src/systems/quantum/QuantumSystem.js?v=20251009-4';
+        import { HolographicSystem } from './src/systems/holographic/HolographicSystem.js?v=20251009-4';
+        import { PolychoraSystem } from './src/systems/polychora/PolychoraSystem.js?v=20251009-4';
+        import { AudioAnalyzer } from './src/audio/AudioAnalyzer.js?v=20251009-4';
+        import { GalleryManager } from './src/export/GalleryManager.js?v=20251009-4';
 
         // Initialize
         const registry = new SystemRegistry();
@@ -608,14 +656,17 @@
         });
 
         // Parameters
-        const params = ['rot4dXW', 'rot4dYW', 'rot4dZW', 'gridDensity', 'speed', 'hue'];
+        const params = ['rot4dXW', 'rot4dYW', 'rot4dZW', 'gridDensity', 'speed', 'hue', 'geometry', 'morphFactor', 'chaos', 'intensity', 'saturation', 'dimension'];
         params.forEach(param => {
             const slider = document.getElementById(param);
             const display = document.getElementById(param + 'Val');
 
             slider.addEventListener('input', (e) => {
                 const value = parseFloat(e.target.value);
-                display.textContent = value.toFixed(param === 'gridDensity' ? 0 : param.includes('rot') ? 2 : 1);
+                let decimals = 1;
+                if (param === 'gridDensity' || param === 'geometry' || param === 'hue') decimals = 0;
+                else if (param.includes('rot') || param === 'dimension') decimals = 2;
+                display.textContent = value.toFixed(decimals);
                 registry.updateParameter(param, value);
             });
         });
