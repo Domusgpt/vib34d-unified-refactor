@@ -779,7 +779,7 @@
                 isPlaying = true;
                 document.getElementById('playBtn').textContent = '⏸️ Pause';
 
-                // Visualize audio
+                // Visualize audio and set global reactive data
                 setInterval(() => {
                     if (!audioAnalyzer) return;
                     const data = audioAnalyzer.analyze();
@@ -790,6 +790,15 @@
                         const value = data.bands[bandNames[i]]?.value || 0;
                         bar.style.height = (value * 100) + '%';
                     });
+
+                    // CRITICAL: Set global audio reactive data for visualizers
+                    window.audioEnabled = true;
+                    window.audioReactive = {
+                        bass: data.bands.bass?.value || 0,
+                        mid: data.bands.mid?.value || 0,
+                        high: data.bands.high?.value || 0,
+                        energy: data.rms || 0
+                    };
                 }, 50);
             }
         });
