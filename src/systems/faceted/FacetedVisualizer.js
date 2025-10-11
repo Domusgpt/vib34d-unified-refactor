@@ -529,6 +529,13 @@ void main() {
     updateParameters(params) {
         this.params = { ...this.params, ...params };
     }
+
+    /**
+     * Update a single parameter
+     */
+    updateParameter(name, value) {
+        this.params[name] = value;
+    }
     
     /**
      * Update mouse interaction state

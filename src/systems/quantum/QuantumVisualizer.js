@@ -842,8 +842,15 @@ void main() {
      */
     updateParameters(params) {
         this.params = { ...this.params, ...params };
-        
+
         // Don't call render() here - engine will call it to prevent infinite loop
+    }
+
+    /**
+     * Update a single parameter
+     */
+    updateParameter(name, value) {
+        this.params[name] = value;
     }
     
     /**

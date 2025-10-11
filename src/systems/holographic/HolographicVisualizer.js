@@ -901,7 +901,28 @@ export class HolographicVisualizer {
         
         // Don't call render() here - engine will call it to prevent infinite loop
     }
-    
+
+    /**
+     * Update a single parameter
+     */
+    updateParameter(name, value) {
+        const mappedParam = this.mapParameterName(name);
+        if (mappedParam !== null && this.variantParams) {
+            let scaledValue = value;
+
+            // Scale gridDensity if needed
+            if (name === 'gridDensity') {
+                scaledValue = 0.3 + (parseFloat(value) - 5) / 95 * 2.2;
+            }
+
+            this.variantParams[mappedParam] = scaledValue;
+
+            if (mappedParam === 'geometryType') {
+                this.roleParams = this.generateRoleParams(this.role);
+            }
+        }
+    }
+
     /**
      * Map global parameter names to holographic system parameter names
      */
